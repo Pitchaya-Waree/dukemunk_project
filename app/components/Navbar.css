@@ -1,0 +1,43 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 80px;
+  background: transparent;
+  position: absolute;
+  width: 100%;
+  z-index: 10;
+  color: white;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 30px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: white;
+  font-weight: 300;
+  transition: 0.3s;
+}
+
+.nav-links a:hover {
+  color: #c5a059; /* สีทอง */
+}
+
+.btn-contact {
+  padding: 10px 25px;
+  background: #c5a059;
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+}

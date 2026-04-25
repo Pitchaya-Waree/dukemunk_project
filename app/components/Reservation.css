@@ -1,0 +1,39 @@
+.reservation {
+  padding: 80px 20px;
+  text-align: center;
+  background: #fdfdfd;
+}
+
+.reservation h2 {
+  font-size: 36px;
+  margin-bottom: 40px;
+  color: #1a1a1a;
+}
+
+.res-form {
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.res-form input {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.res-form button {
+  padding: 15px;
+  background: #1a1a1a;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+.res-form button:hover {
+  background: #333;
+}
