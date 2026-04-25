@@ -16,7 +16,5 @@ export default function Navbar() {
         <a href="#maps" className='btn-explore'>HOW TO GET HERE</a>
       </div>
     </div>
-
-
   );
 }

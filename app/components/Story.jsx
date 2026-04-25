@@ -3,7 +3,7 @@ import './Story.css';
 
 const Story = () => {
     return (
-        <section className="story">
+        <section id="story" className="story">
             <div className="story-content">
                 <h2 className="story-title">Our Story</h2>
                 <p className="story-text">
