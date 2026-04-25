@@ -4,7 +4,6 @@ import './Navbar.css';
 export default function Navbar() {
   return (
     <div id="navbar" className="navbar">
-      {/* <div className="logo">DUKEMUNK DINING</div> */}
       <div className="grow">
         <a href="#home" className='btn-explore'>OUR STORY</a>
       </div>

@@ -2,7 +2,7 @@
 
 .story {
   padding: 4rem 2rem;
-  background-color: #f9f9f9;
+  background-color: #082540;
   display: flex;
   justify-content: center;
 }
@@ -15,7 +15,7 @@
 .story-title {
   font-family: 'Playfair Display', serif;
   font-size: 2.5rem;
-  color: #1a1a2e;
+  color: #c5a059;
   margin-bottom: 1.5rem;
 }
 
@@ -23,7 +23,7 @@
   font-family: 'Playfair Display', serif;
   font-size: 1.1rem;
   line-height: 1.8;
-  color: #555;
+  color: #c5a059;
   margin-bottom: 1rem;
 }
 
