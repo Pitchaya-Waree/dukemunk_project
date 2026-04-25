@@ -9,7 +9,7 @@
     position: sticky;
     position: -webkit-sticky;
     z-index: 1000;
-    top: 0;
+    top: 10px;
     gap: 0;
     padding: 15px 0;
 }
@@ -17,7 +17,7 @@
 
 .btn-explore {
   padding: 18px 45px;
-  border: 2px solid #071932;
+  border: 2px solid #c5a059;
   background: #1a1a2e;
   color: #c5a059;
   text-decoration: none;
@@ -30,4 +30,8 @@
 
 .grow {
   transition: all .2s ease-in-out;
+}
+.grow:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(197, 160, 89, 0.6);
 }

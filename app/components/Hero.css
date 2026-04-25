@@ -1,5 +1,5 @@
 .hero {
-  height: 80vh;
+  height: 93vh;
   background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
               url('https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1600');
   background-size: cover;
@@ -23,19 +23,5 @@
   font-size: 20px;
   margin-bottom: 30px;
   font-weight: 300;
-}
-
-.btn-explore {
-  padding: 15px 40px;
-  border: 2px solid #c5a059;
   color: #c5a059;
-  text-decoration: none;
-  text-transform: uppercase;
-  transition: 0.4s;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-}
-
-.btn-explore:hover {
-  background: #c5a059;
-  color: white;
 }
