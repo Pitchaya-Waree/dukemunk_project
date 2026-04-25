@@ -1,4 +1,4 @@
-'use client'; // ต้องมีคำนี้เพราะเราใช้ useState ใน Reservation
+'use client';
 import React from 'react';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
@@ -7,6 +7,7 @@ import Reservation from '@/components/Reservation';
 import Footer from '@/components/Footer';
 
 export default function table() {
+
   return (
     <main>
       <Hero />

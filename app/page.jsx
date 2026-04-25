@@ -7,6 +7,7 @@ import Reservation from '@/components/Reservation';
 import Footer from '@/components/Footer';
 
 export default function RestaurantPage() {
+
   return (
     <main>
       <Hero />
