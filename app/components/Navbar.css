@@ -1,43 +1,31 @@
 .navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 80px;
-  background: transparent;
-  position: absolute;
-  width: 100%;
-  z-index: 10;
-  color: white;
+    font-family: "AdobeDevanagari Regular";
+    display: flex;
+    width: 80%;
+    height: auto;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    margin-top: -35px;
+    position: sticky;
+    position: -webkit-sticky;
+    z-index: 1;
+    top: 0;
+    gap: 0;
 }
 
-.logo {
-  font-size: 24px;
-  font-weight: bold;
-  letter-spacing: 2px;
-}
-
-.nav-links {
-  display: flex;
-  list-style: none;
-  gap: 30px;
-}
-
-.nav-links a {
+.btn-explore {
+  padding: 15px 40px;
+  border: 2px solid #071932;
+  background: #1a1a2e;
+  color: #c5a059;
   text-decoration: none;
-  color: white;
-  font-weight: 300;
-  transition: 0.3s;
+  text-transform: uppercase;
+  transition: 0.4s;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  font-family: 'Playfair Display', serif;
 }
 
-.nav-links a:hover {
-  color: #c5a059; /* สีทอง */
-}
-
-.btn-contact {
-  padding: 10px 25px;
-  background: #c5a059;
-  border: none;
-  color: white;
-  cursor: pointer;
-  border-radius: 4px;
+.grow {
+  transition: all .2s ease-in-out;
 }

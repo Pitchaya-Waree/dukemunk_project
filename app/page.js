@@ -2,15 +2,18 @@
 import React from 'react';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
+import Story from '@/components/Story';
 import Reservation from '@/components/Reservation';
+import Footer from '@/components/Footer';
 
 export default function RestaurantPage() {
   return (
     <main>
-      <Navbar />
       <Hero />
-      <Reservation />
-      {/* คุณสามารถเพิ่มส่วนอื่นๆ เช่น Menu หรือ Gallery ได้ที่นี่ */}
+      <Navbar />
+      <Story />
+      {/* <Reservation /> */}
+      <Footer />
     </main>
   );
 }

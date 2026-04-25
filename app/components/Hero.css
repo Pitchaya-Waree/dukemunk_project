@@ -13,6 +13,7 @@
 
 .hero-content h1 {
   font-size: 60px;
+  color: #c5a059;
   margin-bottom: 20px;
   font-family: 'Playfair Display', serif;
 }
@@ -30,6 +31,7 @@
   text-decoration: none;
   text-transform: uppercase;
   transition: 0.4s;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .btn-explore:hover {
