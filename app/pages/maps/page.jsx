@@ -5,8 +5,9 @@ import Hero from '@/components/Hero';
 import Story from '@/components/Story';
 import Reservation from '@/components/Reservation';
 import Footer from '@/components/Footer';
+import Maps from '@/components/Maps';
 
-export default function table() {
+export default function maps() {
 
   return (
     <main>
@@ -14,7 +15,7 @@ export default function table() {
       <Navbar />
       {/* <Story /> */}
       {/* <Reservation /> */}
-      
+      <Maps />
       <Footer />
     </main>
   );
