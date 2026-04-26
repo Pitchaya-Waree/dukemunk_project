@@ -17,8 +17,8 @@ export default function Reservation() {
   const [showPopup, setShowPopup] = useState(false); // ควบคุมการโชว์ Popup
   const [isSubmitting, setIsSubmitting] = useState(false); // ควบคุมปุ่มตอนกำลังบันทึก
 
+  // 1. ตรวจสอบ User และตั้งค่าว้น/เวลาเริ่มต้นตอนเปิดหน้าเว็บ
   useEffect(() => {
-    // 1. เช็คว่าใครล็อกอินอยู่ (Session Persistence)
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session?.user) {
@@ -27,28 +27,60 @@ export default function Reservation() {
     };
     checkUser();
 
-    // 2. เซ็ตวันและเวลาปัจจุบัน
     const now = new Date();
-    const currentDate = now.toLocaleDateString('en-CA'); 
-    const currentTime = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-    
-    setDate(currentDate);
-    setTime('11:00');
-    // 3. ดึงข้อมูลโต๊ะ
-    const fetchTables = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('tables')
-          .select('*')
-          .order('id', { ascending: true });
+    setDate(now.toLocaleDateString('en-CA')); // เซ็ตเป็นวันปัจจุบัน
+    setTime('11:00'); // เซ็ตเป็นรอบ 11:00 AM
+  }, []);
 
-        if (error) throw error;
-        if (data) {
-          const tablesWithStatus = data.map(table => ({
-            ...table,
-            status: 'available' 
-          }));
-          // จัดเรียงชื่อให้ถูกต้อง (Table 2 มาก่อน Table 10)
+  // 2. ดึงข้อมูลโต๊ะ และเช็คการจองตาม "วันและเวลา" ที่เลือก
+  // ระบบจะทำงานใหม่ทันทีที่ผู้ใช้เปลี่ยน Date หรือ Time
+  useEffect(() => {
+    const fetchTablesAndReservations = async () => {
+      if (!date || !time) return; // ต้องรอให้มีค่าวัน/เวลาครบก่อน
+      
+      setLoadingTables(true);
+      setSelectedTable(null); // ยกเลิกการเลือกโต๊ะเก่าเมื่อผู้ใช้เปลี่ยนเวลา
+
+      try {
+        // ดึงข้อมูลโต๊ะทั้งหมด
+        const { data: tables, error: tablesError } = await supabase
+          .from('tables')
+          .select('*');
+        
+        if (tablesError) throw tablesError;
+
+        // ดึงข้อมูลการจอง **เฉพาะวันและเวลาที่เลือกบนหน้าจอ**
+        const { data: reservations, error: resError } = await supabase
+          .from('reservations')
+          .select('*')
+          .eq('reservation_date', date)
+          .eq('reservation_time', time);
+        
+        if (resError) throw resError;
+
+        // นำข้อมูลโต๊ะมาคำนวณสถานะใหม่
+        if (tables) {
+          const tablesWithStatus = tables.map(table => {
+            // เช็คว่ามีคนจองโต๊ะ id นี้ ในวันและเวลานี้หรือไม่?
+            const booking = reservations.find(res => res.table_id === table.id);
+            
+            let currentStatus = 'available'; // สีเขียว
+            
+            if (booking) {
+              if (booking.status === 'confirmed') {
+                currentStatus = 'reserved'; // สีเหลือง
+              } else if (booking.status === 'seated') {
+                currentStatus = 'occupied'; // สีแดง
+              }
+            }
+
+            return {
+              ...table,
+              status: currentStatus 
+            };
+          });
+
+          // จัดเรียง Table 1 ไปจนถึง Table 10 ให้ถูกต้อง
           const sortedData = tablesWithStatus.sort((a, b) => 
             a.table_name.localeCompare(b.table_name, undefined, { numeric: true })
           );
@@ -60,10 +92,11 @@ export default function Reservation() {
         setLoadingTables(false);
       }
     };
-    fetchTables();
-  }, []);
 
-  // ฟังก์ชันคลิกเลือกโต๊ะ
+    fetchTablesAndReservations();
+  }, [date, time]); // <--- ตัวแปรนี้คือหัวใจสำคัญ! เมื่อ date หรือ time เปลี่ยน โค้ดจะดึงข้อมูลมาเปลี่ยนสีโต๊ะใหม่ทันที
+
+  // ฟังก์ชันคลิกเลือกโต๊ะ (คลิกได้เฉพาะโต๊ะว่าง)
   const handleTableClick = (table) => {
     if (table.status === 'available') {
       if (selectedTable?.id === table.id) {
@@ -74,7 +107,6 @@ export default function Reservation() {
     }
   };
 
-  // เปิด Popup เมื่อกดปุ่ม Confirm & Continue
   const handleOpenPopup = () => {
     if (!currentUser) {
       alert('Please log in before making a reservation.');
@@ -83,12 +115,11 @@ export default function Reservation() {
     setShowPopup(true);
   };
 
-  // ฟังก์ชันบันทึกข้อมูลลง Database
+  // ฟังก์ชันบันทึกข้อมูลการจอง
   const handleConfirmBooking = async () => {
     setIsSubmitting(true);
 
     try {
-      // บันทึกลงตาราง reservations
       const { error } = await supabase
         .from('reservations')
         .insert([
@@ -98,20 +129,19 @@ export default function Reservation() {
             reservation_date: date,
             reservation_time: time,
             guest_count: parseInt(guests),
-            status: 'confirmed' // ใช้ status สำหรับบอกระบบว่าการจองเสร็จสมบูรณ์
+            status: 'confirmed' 
           }
         ]);
 
       if (error) throw error;
 
-      // ถ้าบันทึกสำเร็จ ให้เปลี่ยนสถานะโต๊ะในหน้าจอเป็น 'reserved' (สีเหลือง)
+      // เมื่อจองเสร็จ เปลี่ยนสีโต๊ะที่เพิ่งจองให้เป็นสีเหลืองทันที
       setTablesData(prevData => 
         prevData.map(t => 
           t.id === selectedTable.id ? { ...t, status: 'reserved' } : t
         )
       );
 
-      // เคลียร์การเลือกโต๊ะและปิด Popup
       setSelectedTable(null);
       setShowPopup(false);
       alert('Reservation successful!');
@@ -127,14 +157,17 @@ export default function Reservation() {
   return (
     <div className="reservation-container">
       
-      {/* --- ส่วน Popup ยืนยันการจอง --- */}
+      {/* Popup ยืนยันการจอง */}
       {showPopup && (
         <div className="popup-overlay">
           <div className="popup-card">
             <h3 className="popup-title">Confirm Reservation?</h3>
             <div className="popup-text">
               <p><strong>Table:</strong> {selectedTable?.table_name}</p>
-              <p><strong>Date:</strong> {date} at {time}</p>
+              <p>
+                <strong>Date:</strong> {date} <br/>
+                <strong>Time:</strong> {time === '11:00' ? '11:00 AM - 02:00 PM' : '05:00 PM - 08:00 PM'}
+              </p>
               <p><strong>Guests:</strong> {guests} People</p>
             </div>
             <div className="popup-buttons">
@@ -157,31 +190,24 @@ export default function Reservation() {
         </div>
       )}
 
-      {/* แผงด้านซ้าย */}
       <div className="left-panel">
         <h2 className="panel-title">Reservation Details</h2>
         
-        {/* เช็คโชว์สถานะล็อกอินขำๆ ให้รู้ว่าใครล็อกอินอยู่ (ลบได้ถ้าไม่ใช้) */}
         {currentUser && (
-          <p style={{ color: '#2ecc71', fontSize: '0.85rem', marginBottom: '16px' }}>
+          <p style={{ color: '#2ecc71', fontSize: '0.85rem', margin: '-16px 0 24px 0' }}>
             ✓ Logged in as: {currentUser.email}
           </p>
         )}
 
         <div className="form-group">
           <label className="form-label"><span>📅</span> Date</label>
+          {/* เมื่อผู้ใช้เลือกวันที่ใหม่ State date จะถูกเปลี่ยน และไปสั่งให้ useEffect ดึงข้อมูลโต๊ะใหม่ */}
           <input type="date" className="form-input" value={date} onChange={(e) => setDate(e.target.value)} />
         </div>
 
         <div className="form-group">
           <label className="form-label"><span>🕒</span> Time</label>
-          {/* เปลี่ยน input เป็น select เพื่อสร้าง Dropdown */}
-          <select 
-            className="form-input" 
-            value={time} 
-            onChange={(e) => setTime(e.target.value)}
-          >
-            {/* กำหนดค่า value ที่จะส่งเข้า Database (11:00 และ 17:00) */}
+          <select className="form-input" value={time} onChange={(e) => setTime(e.target.value)}>
             <option value="11:00">11:00 AM - 02:00 PM</option>
             <option value="17:00">05:00 PM - 08:00 PM</option>
           </select>
@@ -219,7 +245,6 @@ export default function Reservation() {
         </div>
       </div>
 
-      {/* แผงด้านขวา */}
       <div className="right-panel">
         <h2 className="panel-title" style={{ textAlign: 'center' }}>Restaurant Floor Plan</h2>
         {!loadingTables && (
