@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 // ⚠️ อย่าลืมแก้ Path ของ supabaseClient ให้ตรงกับโปรเจกต์คุณ
-import { supabase } from '@/supabaseClient'; 
+import { supabase } from '@/supabaseClient';
 import './Signup.css';
 
 export default function Signup() {
@@ -47,8 +47,14 @@ export default function Signup() {
             setErrorMsg(error.message);
             setLoading(false);
         } else {
-            setSuccessMsg('Registration successful! Please check your email to verify your account.');
+            // เปลี่ยนข้อความแจ้งเตือนเล็กน้อยให้รู้ว่าจะเปลี่ยนหน้า
+            setSuccessMsg('Registration successful! Redirecting to login page...');
             setLoading(false);
+
+            // เปลี่ยนไปหน้า Login 
+            setTimeout(() => {
+                router.push('/pages/login');
+            }, 2000);
         }
     };
 
@@ -73,14 +79,14 @@ export default function Signup() {
                         <h2 className="register-title">Register</h2>
 
                         <form onSubmit={handleSignup}>
-                            
+
                             {/* แถวที่ 1: ชื่อ - นามสกุล */}
                             <div className="form-grid">
                                 <div className="input-group">
                                     <label className="input-label">First Name *</label>
-                                    <input 
-                                        type="text" 
-                                        className="register-input" 
+                                    <input
+                                        type="text"
+                                        className="register-input"
                                         placeholder="Enter your First Name"
                                         value={firstName}
                                         onChange={(e) => setFirstName(e.target.value)}
@@ -89,9 +95,9 @@ export default function Signup() {
                                 </div>
                                 <div className="input-group">
                                     <label className="input-label">Last Name *</label>
-                                    <input 
-                                        type="text" 
-                                        className="register-input" 
+                                    <input
+                                        type="text"
+                                        className="register-input"
                                         placeholder="Enter your Last Name"
                                         value={lastName}
                                         onChange={(e) => setLastName(e.target.value)}
@@ -104,9 +110,9 @@ export default function Signup() {
                             <div className="form-grid">
                                 <div className="input-group">
                                     <label className="input-label">Email Address *</label>
-                                    <input 
-                                        type="email" 
-                                        className="register-input" 
+                                    <input
+                                        type="email"
+                                        className="register-input"
                                         placeholder="Enter your Email"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
@@ -117,9 +123,9 @@ export default function Signup() {
                                     <label className="input-label">Phone Number *</label>
                                     <div className="phone-input-container">
                                         <div className="country-code">+66</div>
-                                        <input 
-                                            type="tel" 
-                                            className="phone-input" 
+                                        <input
+                                            type="tel"
+                                            className="phone-input"
                                             placeholder="Your Phone Number"
                                             value={phone}
                                             onChange={(e) => setPhone(e.target.value)}
@@ -133,17 +139,17 @@ export default function Signup() {
                             <div className="input-group" style={{ marginBottom: '20px' }}>
                                 <label className="input-label">Password (Login Password) *</label>
                                 <div className="input-field-wrapper">
-                                    <input 
-                                        type={showPassword ? "text" : "password"} 
-                                        className="register-input" 
+                                    <input
+                                        type={showPassword ? "text" : "password"}
+                                        className="register-input"
                                         placeholder="Enter your password"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                         required
                                         minLength="6"
                                     />
-                                    <span 
-                                        className="eye-icon" 
+                                    <span
+                                        className="eye-icon"
                                         onClick={() => setShowPassword(!showPassword)}
                                     >
                                         {showPassword ? '🫣' : '👁️'}
@@ -155,10 +161,15 @@ export default function Signup() {
                             {errorMsg && <div className="message-box message-error">{errorMsg}</div>}
                             {successMsg && <div className="message-box message-success">{successMsg}</div>}
 
+                            {/* Login   */}
+                            <div className="Login">
+                                Already have an account? <a href="/pages/login">Login here</a>
+                            </div>
+
                             {/* ปุ่ม Confirm */}
                             <div className="btn-wrapper">
-                                <button 
-                                    type="submit" 
+                                <button
+                                    type="submit"
                                     className="btn-confirm"
                                     disabled={loading}
                                 >

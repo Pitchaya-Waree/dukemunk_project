@@ -121,7 +121,7 @@ export default function LoginPage() {
                         </form>
 
                         <div className="signup-link">
-                            Don't have an account ? <a href="/pages/signup">Sign up</a>
+                            <a href="/pages/signup">Don't have an account ? Sign up</a>
                         </div>
 
                     </div>

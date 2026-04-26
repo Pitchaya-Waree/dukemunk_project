@@ -3,7 +3,7 @@
 /* ครอบทั้งหน้าจอ และใส่รูปพื้นหลัง */
 .login-page-container {
   min-height: 100vh;
-  /* ⚠️ เปลี่ยน URL ด้านล่างเป็นที่อยู่รูปพื้นหลังร้านของคุณ */
+  /* เปลี่ยน URL ด้านล่างเป็นที่อยู่รูปพื้นหลังร้านของคุณ */
   background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070&auto=format&fit=crop');
   background-size: cover;
   background-position: center;
@@ -31,9 +31,7 @@
   width: 100%;
 }
 
-/* ========================================= */
-/* ฝั่งซ้าย: ข้อมูลร้านอาหาร */
-/* ========================================= */
+/* ข้อมูลร้านอาหาร */
 .restaurant-info {
   flex: 1;
   color: white;
@@ -46,7 +44,7 @@
 .brand-logo {
   font-size: 3rem;
   font-weight: bold;
-  color: #f1c40f; /* สีทอง/เหลือง */
+  color: #f1c40f;
   margin: 0;
   font-family: serif;
 }
@@ -72,9 +70,7 @@
   font-size: 1.2rem;
 }
 
-/* ========================================= */
-/* ฝั่งขวา: กล่องฟอร์ม Login สีขาว */
-/* ========================================= */
+/* กล่องฟอร์ม Login สีขาว */
 .login-card {
   background-color: white;
   border-radius: 16px;
@@ -110,7 +106,7 @@
   align-items: center;
 }
 
-/* Input แบบเส้นขีดล่าง (Underline) */
+/* Input แบบเส้นขีดล่าง */
 .login-input {
   width: 100%;
   border: none;
