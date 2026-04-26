@@ -39,14 +39,14 @@ export default function Table() {
       setLoading(true);
 
       try {
-        // 1. ดึงข้อมูลโต๊ะทั้งหมด
+        //ดึงข้อมูลโต๊ะทั้งหมด
         const { data: tables, error: tablesError } = await supabase
           .from('tables')
           .select('*');
 
         if (tablesError) throw tablesError;
 
-        // 2. ดึงข้อมูลการจอง "เฉพาะวันที่และเวลาที่เลือก"
+        //ดึงข้อมูลการจอง "เฉพาะวันที่และเวลาที่เลือก"
         const { data: reservations, error: resError } = await supabase
           .from('reservations')
           .select('*')
@@ -68,7 +68,7 @@ export default function Table() {
             };
           });
 
-          // จัดเรียงข้อมูลแบบธรรมชาติ (Natural Sort)
+          // จัดเรียงข้อมูลแบบธรรมชาติ
           const sortedData = tablesWithStatus.sort((a, b) => 
             a.table_name.localeCompare(b.table_name, undefined, { numeric: true })
           );
@@ -83,7 +83,7 @@ export default function Table() {
     };
 
     fetchTablesAndStatus();
-  }, [filterDate, filterTime]); // 👈 useEffect จะทำงานใหม่ทุกครั้งที่ Date หรือ Time เปลี่ยน
+  }, [filterDate, filterTime]); // useEffect ทำงานใหม่ทุกครั้งที่ Date หรือ Time เปลี่ยน
 
   return (
     <div className="page-container">
@@ -116,7 +116,6 @@ export default function Table() {
           </div>
 
         </div>
-        {/* -------------------------------------- */}
         
         <div className="floor-plan-grid">
           {loading ? (
@@ -129,7 +128,7 @@ export default function Table() {
                   name={t.table_name} 
                   seats={t.seats} 
                   shape={t.shape} 
-                  status={t.status} // 👈 ส่ง status จริงๆ ที่คำนวณมาแล้วไปแสดงผล
+                  status={t.status} //ส่ง status
                 />
               ))}
             </div>
