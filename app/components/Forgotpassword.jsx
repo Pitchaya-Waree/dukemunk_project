@@ -23,7 +23,7 @@ export default function ForgotPassword() {
         try {
             // ส่งคำสั่งรีเซ็ตรหัสผ่านพร้อมแนบอีเมล
             const { error } = await supabase.auth.resetPasswordForEmail(email, {
-                redirectTo: `${window.location.origin}/pages/login`, // หลังจากคลิกลิงก์ในอีเมลแล้วจะพาไปที่หน้า Login
+                redirectTo: `${window.location.origin}/pages/updatepassword`, // หลังจากคลิกลิงก์ในอีเมลแล้วจะพาไปที่หน้า Update Password
             });
 
             if (error) throw error; // ถ้าระบบ Supabase แจ้ง Error ให้โยนไปเข้าบล็อก catch
