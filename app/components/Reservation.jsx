@@ -10,20 +10,18 @@ export default function Reservation() {
   const [currentUser, setCurrentUser] = useState(null); // เก็บข้อมูลผู้ใช้ที่กำลังล็อกอินอยู่
 
   // Data States (ข้อมูลจาก Database)
-  const [tablesData, setTablesData] = useState([]); // เก็บรายการโต๊ะและสถานะ (available, reserved, occupied)
-  const [loadingTables, setLoadingTables] = useState(true); // สถานะการโหลดข้อมูล (true = กำลังโหลด)
+  const [tablesData, setTablesData] = useState([]); // เก็บรายการโต๊ะและสถานะ
+  const [loadingTables, setLoadingTables] = useState(true); 
 
   // Form States (ข้อมูลที่ผู้ใช้เลือก)
   const [selectedTable, setSelectedTable] = useState(null); // เก็บโต๊ะที่ผู้ใช้คลิกเลือก
-  const [date, setDate] = useState(''); // เก็บวันที่ต้องการจอง (รูปแบบ YYYY-MM-DD)
-  const [time, setTime] = useState(''); // เก็บเวลาที่ต้องการจอง (ต้องมี :00 วินาทีด้วย)
+  const [date, setDate] = useState('');
+  const [time, setTime] = useState('');
   const [guests, setGuests] = useState(2); // จำนวนแขก (ค่าเริ่มต้นคือ 2 คน)
 
-  // UI States (ควบคุมการแสดงผลหน้าจอ)
+  // UI States
   const [showPopup, setShowPopup] = useState(false); // ควบคุมการเปิด/ปิดหน้าต่าง Popup ยืนยัน
   const [isSubmitting, setIsSubmitting] = useState(false); // ป้องกันผู้ใช้กดปุ่ม Confirm ซ้ำตอนกำลังโหลด
-
-  // EFFECTS (ฟังก์ชันที่ทำงานอัตโนมัติ)
 
   // Effect โหลดข้อมูล User และตั้งค่า วันที่/เวลา เริ่มต้น (ทำงานครั้งเดียวตอนเปิดหน้าเว็บ)
   useEffect(() => {
