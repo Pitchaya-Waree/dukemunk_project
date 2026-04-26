@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 
 export default function Navbar() {
   const router = useRouter();
-  
+
   return (
     <div id="navbar" className="navbar">
       <div className="grow">
@@ -17,6 +17,8 @@ export default function Navbar() {
         <a href="/pages/reservation" className='btn-explore'>RESERVATION</a>
       </div><div className="grow">
         <a href="/pages/maps" className='btn-explore'>HOW TO GET HERE</a>
+      </div><div className="grow">
+        <a href="/pages/login" className='btn-explore'>LOGIN</a>
       </div>
     </div>
   );
