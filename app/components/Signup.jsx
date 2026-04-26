@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { supabase } from '@/supabaseClient'; 
 import './Signup.css';
 
-export default function SignupPage() {
+export default function Signup() {
     const router = useRouter();
 
     // States สำหรับเก็บค่าฟอร์ม
@@ -63,8 +63,8 @@ export default function SignupPage() {
                         <p className="brand-sub">ดุกมั้ง</p>
                         <div className="details-text">
                             <p>ดุกมั้ง - DUKE MUNK</p>
-                            <p>Tue-Sun : 12:00 - 9:30pm</p>
-                            <p>Closed : Mon</p>
+                            <p>Lorem ipsum - Dolor sit | 00:00 A.M. - 00:00 P.M.</p>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                         </div>
                     </div>
 

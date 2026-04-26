@@ -1,13 +1,13 @@
-'use client'; // ต้องมีคำนี้เพราะเราใช้ useState ใน Reservation
+    'use client'; // ต้องมีคำนี้เพราะเราใช้ useState ใน Reservation
+import SignupPage from '@/components/Signup';
 import React from 'react';
-import LoginPage from '@/components/Signup';
 
 
-export default function SignupPage() {
+export default function RestaurantPage() {
 
   return (
     <main>
-        <LoginPage />
+        <SignupPage />
     </main>
   );
 }

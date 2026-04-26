@@ -54,12 +54,12 @@ export default function LoginPage() {
 
                         <div className="details-text">
                             <p>ดุกมั้ง - DUKE MUNK</p>
-                            <p>Tue-Sun : 12:00 - 9:30pm</p>
-                            <p>Closed : Mon</p>
+                            <p>Lorem ipsum - Dolor sit | 00:00 A.M. - 00:00 P.M.</p>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                         </div>
                     </div>
 
-                    // login form
+                    {/* login form */}
                     <div className="login-card">
                         <h2 className="login-title">Login</h2>
 
@@ -99,7 +99,7 @@ export default function LoginPage() {
                                 </div>
                             </div>
 
-                            // error catch
+                            {/* error catch */}
                             {errorMsg && (
                                 <div style={{ color: '#e74c3c', fontSize: '0.85rem', marginBottom: '16px', textAlign: 'center' }}>
                                     {errorMsg === 'Invalid login credentials' ? 'อีเมลหรือรหัสผ่านไม่ถูกต้อง' : errorMsg}
