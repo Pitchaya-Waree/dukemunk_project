@@ -1,4 +1,4 @@
-'use client'; // ต้องมีคำนี้เพราะเราใช้ useState ใน Reservation
+'use client';
 import LoginPage from '@/components/Login';
 import React from 'react';
 

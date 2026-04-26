@@ -163,7 +163,7 @@ export default function Signup() {
 
                             {/* Login   */}
                             <div className="Login">
-                                Already have an account? <a href="/pages/login">Login here</a>
+                                <a href="/pages/login">Already have an account? Login here</a>
                             </div>
 
                             {/* ปุ่ม Confirm */}

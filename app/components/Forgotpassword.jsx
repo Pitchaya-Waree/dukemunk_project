@@ -1,6 +1,5 @@
 'use client';
 import React, { useState } from 'react';
-// ⚠️ อย่าลืมแก้ Path ของ supabaseClient ให้ตรงกับโปรเจกต์คุณ
 import { supabase } from '@/supabaseClient'; 
 import './ForgotPassword.css';
 

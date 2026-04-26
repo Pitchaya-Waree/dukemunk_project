@@ -107,7 +107,7 @@ export default function LoginPage() {
                             )}
 
                             <div className="forgot-password">
-                                <a href="/pages/forgot-password">FORGOT YOUR PASSWORD?</a>
+                                <a href="/pages/forgotPassword">FORGOT YOUR PASSWORD?</a>
                             </div>
 
                             <button 
@@ -121,7 +121,7 @@ export default function LoginPage() {
                         </form>
 
                         <div className="signup-link">
-                            <a href="/pages/signup">Don't have an account ? Sign up</a>
+                            Don't have an account ?<a href="/pages/signup"> Sign up</a>
                         </div>
 
                     </div>
