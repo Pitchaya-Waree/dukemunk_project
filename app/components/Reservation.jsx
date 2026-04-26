@@ -4,44 +4,55 @@ import { supabase } from '@/supabaseClient';
 import './Reservation.css';
 
 export default function Reservation() {
-  // 1. States สำหรับเก็บข้อมูลโต๊ะจาก Database
+  // --- States ---
+  const [currentUser, setCurrentUser] = useState(null); // เก็บข้อมูลคนล็อกอิน
   const [tablesData, setTablesData] = useState([]);
   const [loadingTables, setLoadingTables] = useState(true);
   const [selectedTable, setSelectedTable] = useState(null);
-
-  // 2. States สำหรับฟอร์ม (ตั้งค่าเริ่มต้นเป็นค่าว่างไปก่อน เดี๋ยวเราจะดึงเวลาปัจจุบันมาใส่)
+  
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const [guests, setGuests] = useState(2);
 
+  const [showPopup, setShowPopup] = useState(false); // ควบคุมการโชว์ Popup
+  const [isSubmitting, setIsSubmitting] = useState(false); // ควบคุมปุ่มตอนกำลังบันทึก
+
   useEffect(() => {
-    // --- ตั้งค่า วันที่ และ เวลา ให้เป็นปัจจุบัน (Auto-select current day & time) ---
+    // 1. เช็คว่าใครล็อกอินอยู่ (Session Persistence)
+    const checkUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        setCurrentUser(session.user);
+      }
+    };
+    checkUser();
+
+    // 2. เซ็ตวันและเวลาปัจจุบัน
     const now = new Date();
-    // แปลงวันที่เป็นฟอร์แมต YYYY-MM-DD (ใช้ 'en-CA' เพื่อให้ฟอร์แมตถูกต้องแบบ ISO)
     const currentDate = now.toLocaleDateString('en-CA'); 
-    // แปลงเวลาเป็นฟอร์แมต HH:MM (ใช้ 'en-GB' เพื่อให้เป็นแบบ 24 ชั่วโมง)
     const currentTime = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
     
     setDate(currentDate);
-    setTime(currentTime);
-
-    // --- ฟังก์ชันดึงข้อมูลโต๊ะจาก Database ---
+    setTime('11:00');
+    // 3. ดึงข้อมูลโต๊ะ
     const fetchTables = async () => {
       try {
         const { data, error } = await supabase
           .from('tables')
           .select('*')
-          .order('id', { ascending: true }); // เรียงตาม ID
+          .order('id', { ascending: true });
 
         if (error) throw error;
-
         if (data) {
-          // เพิ่มสถานะ available ให้โต๊ะทุกตัว (เพื่อให้คลิกได้และเป็นสีเขียว)
           const tablesWithStatus = data.map(table => ({
             ...table,
             status: 'available' 
           }));
-          setTablesData(tablesWithStatus);
+          // จัดเรียงชื่อให้ถูกต้อง (Table 2 มาก่อน Table 10)
+          const sortedData = tablesWithStatus.sort((a, b) => 
+            a.table_name.localeCompare(b.table_name, undefined, { numeric: true })
+          );
+          setTablesData(sortedData);
         }
       } catch (error) {
         console.error('Error fetching tables:', error.message);
@@ -49,11 +60,10 @@ export default function Reservation() {
         setLoadingTables(false);
       }
     };
-
     fetchTables();
   }, []);
 
-  // ฟังก์ชันจัดการตอนคลิกโต๊ะ
+  // ฟังก์ชันคลิกเลือกโต๊ะ
   const handleTableClick = (table) => {
     if (table.status === 'available') {
       if (selectedTable?.id === table.id) {
@@ -64,43 +74,122 @@ export default function Reservation() {
     }
   };
 
+  // เปิด Popup เมื่อกดปุ่ม Confirm & Continue
+  const handleOpenPopup = () => {
+    if (!currentUser) {
+      alert('Please log in before making a reservation.');
+      return;
+    }
+    setShowPopup(true);
+  };
+
+  // ฟังก์ชันบันทึกข้อมูลลง Database
+  const handleConfirmBooking = async () => {
+    setIsSubmitting(true);
+
+    try {
+      // บันทึกลงตาราง reservations
+      const { error } = await supabase
+        .from('reservations')
+        .insert([
+          {
+            user_id: currentUser.id,
+            table_id: selectedTable.id,
+            reservation_date: date,
+            reservation_time: time,
+            guest_count: parseInt(guests),
+            status: 'confirmed' // ใช้ status สำหรับบอกระบบว่าการจองเสร็จสมบูรณ์
+          }
+        ]);
+
+      if (error) throw error;
+
+      // ถ้าบันทึกสำเร็จ ให้เปลี่ยนสถานะโต๊ะในหน้าจอเป็น 'reserved' (สีเหลือง)
+      setTablesData(prevData => 
+        prevData.map(t => 
+          t.id === selectedTable.id ? { ...t, status: 'reserved' } : t
+        )
+      );
+
+      // เคลียร์การเลือกโต๊ะและปิด Popup
+      setSelectedTable(null);
+      setShowPopup(false);
+      alert('Reservation successful!');
+
+    } catch (error) {
+      console.error('Error saving reservation:', error.message);
+      alert('Failed to make a reservation. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="reservation-container">
-      {/* ==========================================
-          ส่วนที่ 1: แผงด้านซ้าย (ฟอร์มและข้อมูลโต๊ะ)
-      ========================================== */}
+      
+      {/* --- ส่วน Popup ยืนยันการจอง --- */}
+      {showPopup && (
+        <div className="popup-overlay">
+          <div className="popup-card">
+            <h3 className="popup-title">Confirm Reservation?</h3>
+            <div className="popup-text">
+              <p><strong>Table:</strong> {selectedTable?.table_name}</p>
+              <p><strong>Date:</strong> {date} at {time}</p>
+              <p><strong>Guests:</strong> {guests} People</p>
+            </div>
+            <div className="popup-buttons">
+              <button 
+                className="btn-cancel" 
+                onClick={() => setShowPopup(false)}
+                disabled={isSubmitting}
+              >
+                Cancel
+              </button>
+              <button 
+                className="btn-confirm-popup" 
+                onClick={handleConfirmBooking}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Saving...' : 'Yes, Confirm'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* แผงด้านซ้าย */}
       <div className="left-panel">
         <h2 className="panel-title">Reservation Details</h2>
+        
+        {/* เช็คโชว์สถานะล็อกอินขำๆ ให้รู้ว่าใครล็อกอินอยู่ (ลบได้ถ้าไม่ใช้) */}
+        {currentUser && (
+          <p style={{ color: '#2ecc71', fontSize: '0.85rem', marginBottom: '16px' }}>
+            ✓ Logged in as: {currentUser.email}
+          </p>
+        )}
 
         <div className="form-group">
           <label className="form-label"><span>📅</span> Date</label>
-          <input 
-            type="date" 
-            className="form-input" 
-            value={date} 
-            onChange={(e) => setDate(e.target.value)} 
-          />
+          <input type="date" className="form-input" value={date} onChange={(e) => setDate(e.target.value)} />
         </div>
 
         <div className="form-group">
           <label className="form-label"><span>🕒</span> Time</label>
-          <input 
-            type="time" 
+          {/* เปลี่ยน input เป็น select เพื่อสร้าง Dropdown */}
+          <select 
             className="form-input" 
             value={time} 
-            onChange={(e) => setTime(e.target.value)} 
-          />
+            onChange={(e) => setTime(e.target.value)}
+          >
+            {/* กำหนดค่า value ที่จะส่งเข้า Database (11:00 และ 17:00) */}
+            <option value="11:00">11:00 AM - 02:00 PM</option>
+            <option value="17:00">05:00 PM - 08:00 PM</option>
+          </select>
         </div>
 
         <div className="form-group">
           <label className="form-label"><span>👥</span> Number of Guests</label>
-          <input 
-            type="number" 
-            className="form-input" 
-            value={guests}
-            onChange={(e) => setGuests(e.target.value)}
-            min="1" 
-          />
+          <input type="number" className="form-input" value={guests} onChange={(e) => setGuests(e.target.value)} min="1" />
         </div>
 
         {selectedTable && (
@@ -108,7 +197,6 @@ export default function Reservation() {
             <label className="form-label"><span>📍</span> Selected Table</label>
             <div className="selected-table-container">
               <div className="selected-table-header">
-                {/* ⚠️ เปลี่ยนเป็น .table_name เพื่อให้ตรงกับชื่อคอลัมน์ใน Database ของคุณ */}
                 <span className="selected-table-name">{selectedTable.table_name}</span>
                 <span className="check-icon">✓</span>
               </div>
@@ -118,35 +206,22 @@ export default function Reservation() {
         )}
 
         {selectedTable && (
-          <button className="btn-confirm">Confirm & Continue</button>
+          <button className="btn-confirm" onClick={handleOpenPopup}>Confirm & Continue</button>
         )}
 
         <div className="divider" style={{ marginTop: selectedTable ? '0' : '32px' }}></div>
 
         <h3 className="status-title">Table Status</h3>
         <div className="status-list">
-          <div className="status-item">
-            <div className="status-dot" style={{ backgroundColor: '#2ecc71' }}></div>
-            <span>Available</span>
-          </div>
-          <div className="status-item">
-            <div className="status-dot" style={{ backgroundColor: '#f1c40f' }}></div>
-            <span>Reserved</span>
-          </div>
-          <div className="status-item">
-            <div className="status-dot" style={{ backgroundColor: '#e74c3c' }}></div>
-            <span>Occupied</span>
-          </div>
+          <div className="status-item"><div className="status-dot" style={{ backgroundColor: '#2ecc71' }}></div><span>Available</span></div>
+          <div className="status-item"><div className="status-dot" style={{ backgroundColor: '#f1c40f' }}></div><span>Reserved</span></div>
+          <div className="status-item"><div className="status-dot" style={{ backgroundColor: '#e74c3c' }}></div><span>Occupied</span></div>
         </div>
       </div>
 
-      {/* ==========================================
-          ส่วนที่ 2: แผนผังด้านขวา (Floor Plan)
-      ========================================== */}
+      {/* แผงด้านขวา */}
       <div className="right-panel">
         <h2 className="panel-title" style={{ textAlign: 'center' }}>Restaurant Floor Plan</h2>
-
-        {/* --- ส่วนที่แสดงจำนวนโต๊ะทั้งหมด --- */}
         {!loadingTables && (
           <p style={{ textAlign: 'center', color: '#cda434', marginBottom: '20px', fontSize: '1.1rem' }}>
             We have a total of <strong>{tablesData.length}</strong> tables available.
@@ -157,7 +232,6 @@ export default function Reservation() {
           {loadingTables ? (
             <div style={{ color: '#aaa', padding: '40px' }}>Loading tables from database...</div>
           ) : (
-            // เราสามารถวนลูป map ครั้งเดียวได้เลย เพราะ CSS .table-row มี flex-wrap: wrap อยู่แล้ว
             <div className="table-row">
               {tablesData.map(t => (
                 <div
@@ -169,7 +243,6 @@ export default function Reservation() {
                   }
                   onClick={() => handleTableClick(t)}
                 >
-                  {/* ⚠️ เปลี่ยน t.name เป็น t.table_name */}
                   <div className="table-name">{t.table_name}</div>
                   <div className="table-seats">{t.seats} seats</div>
                 </div>
