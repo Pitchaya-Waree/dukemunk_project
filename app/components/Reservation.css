@@ -1,39 +1,136 @@
-.reservation {
-  padding: 80px 20px;
-  text-align: center;
-  background: #fdfdfd;
-}
-
-.reservation h2 {
-  font-size: 36px;
-  margin-bottom: 40px;
-  color: #1a1a1a;
-}
-
-.res-form {
-  max-width: 600px;
-  margin: 0 auto;
+/* reservation.css */
+.left-panel {
+  width: 380px;
+  background-color: #161616;
+  border: 1px solid #2a2a2a;
+  border-radius: 16px;
+  padding: 32px 28px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
-}
-
-.res-form input {
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.res-form button {
-  padding: 15px;
-  background: #1a1a1a;
   color: white;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  transition: 0.3s;
+  font-family: sans-serif;
+  box-sizing: border-box;
 }
 
-.res-form button:hover {
-  background: #333;
+.panel-title {
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-bottom: 32px;
+  margin-top: 0;
+}
+
+.form-group {
+  margin-bottom: 24px;
+}
+
+.form-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+  color: #e0e0e0;
+  font-weight: 500;
+}
+
+.form-input {
+  width: 100%;
+  background-color: #111;
+  border: 1px solid #333;
+  color: white;
+  padding: 14px 16px;
+  border-radius: 12px;
+  font-size: 1rem;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.form-input:focus {
+  border-color: #d6af3d;
+}
+
+/* --- ส่วนที่ 1: สไตล์สำหรับกล่อง Selected Table ที่เพิ่มมาใหม่ --- */
+.selected-table-container {
+  background-color: #26231a; /* สีพื้นหลังอมน้ำตาลเข้ม */
+  border: 1px solid #5a5135; /* ขอบสีทองหม่น */
+  border-radius: 12px;
+  padding: 16px;
+  position: relative;
+}
+
+.selected-table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.selected-table-name {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.check-icon {
+  color: #2ecc71; /* สีเขียวของเครื่องหมายถูก */
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.selected-table-subtext {
+  font-size: 0.9rem;
+  color: #999;
+}
+/* ------------------------------------------------ */
+
+/* --- ส่วนที่ 2: สไตล์ปุ่ม Confirm แบบใหม่ --- */
+.btn-confirm {
+  width: 100%;
+  background-color: #d8b240; /* สีเหลืองทองตามแบบ */
+  color: #000; /* ตัวอักษรสีดำ */
+  border: none;
+  padding: 16px;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 1.05rem;
+  cursor: pointer;
+  margin-top: 8px;
+  margin-bottom: 32px;
+  transition: background-color 0.2s;
+}
+
+.btn-confirm:hover {
+  background-color: #ebd16c;
+}
+/* -------------------------------------- */
+
+.divider {
+  border-top: 1px solid #2a2a2a;
+  margin-bottom: 32px;
+}
+
+/* สถานะโต๊ะด้านล่างสุด */
+.status-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 16px;
+  margin-top: 0;
+}
+
+.status-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.95rem;
+}
+
+.status-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
 }

@@ -15,7 +15,7 @@ const TableComponent = ({ name, seats, shape, status }) => {
 };
 
 // Component หลักสำหรับแสดงแผนผังทั้งหมด
-export default function RestaurantFloorPlan() {
+export default function Table() {
   const row1 = [
     { id: 1, name: 'Table 1', seats: 2, shape: 'round', status: 'available' },
     { id: 2, name: 'Table 2', seats: 2, shape: 'round', status: 'occupied' },
