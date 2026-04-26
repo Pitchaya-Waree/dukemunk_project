@@ -14,7 +14,10 @@
 /* แผ่นฟิล์มสีดำโปร่งแสงทับรูปภาพ เพื่อให้ตัวหนังสืออ่านง่ายขึ้น */
 .login-overlay {
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background-color: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
@@ -76,7 +79,7 @@
   border-radius: 16px;
   padding: 40px 32px;
   width: 400px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   color: #333;
 }
 
@@ -149,11 +152,13 @@
 
 .btn-login {
   width: 100%;
-  background-color: #f39c12; /* สีส้มตามแบบ */
+  background-color: #f39c12;
+  /* สีส้มตามแบบ */
   color: white;
   border: none;
   padding: 12px;
-  border-radius: 24px; /* ทำปุ่มโค้งมน */
+  border-radius: 24px;
+  /* ทำปุ่มโค้งมน */
   font-weight: bold;
   font-size: 1rem;
   cursor: pointer;
@@ -178,16 +183,25 @@
   font-weight: bold;
 }
 
+.error-catch {
+  color: '#e74c3c';
+  fontSize: '0.85rem';
+  marginBottom: '16px';
+  textAlign: 'center';
+}
+
 /* ทำให้รองรับหน้าจอมือถือ (Responsive) */
 @media (max-width: 768px) {
   .login-content-wrapper {
     flex-direction: column;
     justify-content: center;
   }
+
   .restaurant-info {
     text-align: center;
     align-items: center;
   }
+
   .login-card {
     width: 100%;
     max-width: 400px;

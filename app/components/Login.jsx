@@ -9,11 +9,11 @@ export default function LoginPage() {
 
     // State สำหรับเปิด-ปิด รหัสผ่าน
     const [showPassword, setShowPassword] = useState(false);
-    
+
     // State สำหรับเก็บค่าฟอร์ม
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    
+
     // State สำหรับจัดการสถานะการโหลดและข้อความแจ้งเตือน
     const [loading, setLoading] = useState(false);
     const [errorMsg, setErrorMsg] = useState(null);
@@ -37,9 +37,9 @@ export default function LoginPage() {
         } else {
             // ถ้าระบบเช็คแล้วผ่าน (Login สำเร็จ)
             console.log('Login successful:', data.user);
-            
+
             // เปลี่ยนหน้าไปยังหน้าหลัก หรือหน้าจองโต๊ะ (ปรับแก้ Path ได้ตามต้องการ)
-            router.push('/'); 
+            router.push('/');
         }
     };
 
@@ -101,7 +101,7 @@ export default function LoginPage() {
 
                             {/* error catch */}
                             {errorMsg && (
-                                <div style={{ color: '#e74c3c', fontSize: '0.85rem', marginBottom: '16px', textAlign: 'center' }}>
+                                <div className="error-catch">
                                     {errorMsg === 'Invalid login credentials' ? 'อีเมลหรือรหัสผ่านไม่ถูกต้อง' : errorMsg}
                                 </div>
                             )}
@@ -110,8 +110,8 @@ export default function LoginPage() {
                                 <a href="/pages/forgotpassword">FORGOT YOUR PASSWORD?</a>
                             </div>
 
-                            <button 
-                                type="submit" 
+                            <button
+                                type="submit"
                                 className="btn-login"
                                 disabled={loading}
                                 style={{ opacity: loading ? 0.7 : 1, cursor: loading ? 'not-allowed' : 'pointer' }}
