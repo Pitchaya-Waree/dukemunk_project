@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '@/supabaseClient'; 
+import { supabase } from '@/supabaseClient';
 import './Forgotpassword.css'; // 
 
 export default function UpdatePassword() {
@@ -51,7 +51,7 @@ export default function UpdatePassword() {
 
             // กรณีสำเร็จ: แสดงข้อความและเตรียมเปลี่ยนหน้า
             setSuccessMsg('Password updated successfully! Redirecting to login...');
-            
+
             // หน่วงเวลา 2 วินาทีเพื่อให้ผู้ใช้ได้อ่านข้อความสำเร็จก่อนเด้งไปหน้า Login
             setTimeout(() => {
                 router.push('/pages/login');
@@ -69,7 +69,7 @@ export default function UpdatePassword() {
     return (
         <div className="forgot-page-container">
             <div className="forgot-overlay">
-                
+
                 <div className="forgot-card">
                     <h2 className="forgot-title">Set New Password</h2>
                     <p className="forgot-subtitle">
@@ -77,14 +77,14 @@ export default function UpdatePassword() {
                     </p>
 
                     <form onSubmit={handleUpdatePassword}>
-                        
+
                         {/* ช่องกรอกรหัสผ่านใหม่ */}
                         <div className="input-group" style={{ position: 'relative' }}>
                             <label className="input-label">New Password *</label>
-                            <input 
-                                type={showPassword ? "text" : "password"} 
+                            <input
+                                type={showPassword ? "text" : "password"}
                                 name="newPassword"
-                                className="forgot-input" 
+                                className="forgot-input"
                                 placeholder="Enter new password"
                                 value={formData.newPassword}
                                 onChange={handleChange}
@@ -96,10 +96,10 @@ export default function UpdatePassword() {
                         {/*ช่องยืนยันรหัสผ่านใหม่*/}
                         <div className="input-group" style={{ position: 'relative' }}>
                             <label className="input-label">Confirm New Password *</label>
-                            <input 
-                                type={showPassword ? "text" : "password"} 
+                            <input
+                                type={showPassword ? "text" : "password"}
                                 name="confirmPassword"
-                                className="forgot-input" 
+                                className="forgot-input"
                                 placeholder="Confirm new password"
                                 value={formData.confirmPassword}
                                 onChange={handleChange}
@@ -110,7 +110,7 @@ export default function UpdatePassword() {
 
                         {/* ปุ่มเปิด/ปิดตา*/}
                         <div style={{ textAlign: 'right', marginBottom: '20px', marginTop: '-15px' }}>
-                            <span 
+                            <span
                                 style={{ fontSize: '0.85rem', color: '#888', cursor: 'pointer' }}
                                 onClick={() => setShowPassword(!showPassword)}
                             >
@@ -123,8 +123,8 @@ export default function UpdatePassword() {
                         {successMsg && <div className="message-box message-success">{successMsg}</div>}
 
                         {/* ปุ่ม Confirm*/}
-                        <button 
-                            type="submit" 
+                        <button
+                            type="submit"
                             className="btn-send"
                             // ปุ่มจะถูกปิดการทำงานถ้ากำลังโหลด หรือผู้ใช้ยังกรอกรหัสผ่านไม่ครบทั้ง 2 ช่อง
                             disabled={loading || !formData.newPassword || !formData.confirmPassword}

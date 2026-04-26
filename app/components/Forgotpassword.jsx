@@ -41,7 +41,6 @@ export default function ForgotPassword() {
         }
     };
 
-    // RENDER UI (การวาดหน้าจอ)
     return (
         <div className="forgot-page-container">
             <div className="forgot-overlay">
