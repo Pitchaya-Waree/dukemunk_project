@@ -5,15 +5,17 @@ import Hero from '@/components/Hero';
 import Story from '@/components/Story';
 import Reservation from '@/components/Reservation';
 import Footer from '@/components/Footer';
+import Tables from '@/components/Tables';
 
-export default function reservation() {
+export default function table() {
 
   return (
     <main>
       <Hero />
       <Navbar />
       {/* <Story /> */}
-      <Reservation />
+      {/* <Reservation /> */}
+      <Tables />
       <Footer />
     </main>
   );
