@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { supabase } from '@/supabaseClient'; 
-import './ForgotPassword.css';
+import './Forgotpassword.css';
 
 export default function ForgotPassword() {
     const [email, setEmail] = useState('');

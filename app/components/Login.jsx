@@ -49,7 +49,7 @@ export default function LoginPage() {
                 <div className="login-content-wrapper">
 
                     <div className="restaurant-info">
-                        <h1 className="brand-logo">DUKE MUNK</h1>
+                        <a href="/" className="brand-logo">DUKE MUNK</a>
                         <p className="brand-sub">ดุกมั้ง</p>
 
                         <div className="details-text">
@@ -107,7 +107,7 @@ export default function LoginPage() {
                             )}
 
                             <div className="forgot-password">
-                                <a href="/pages/forgotPassword">FORGOT YOUR PASSWORD?</a>
+                                <a href="/pages/forgotpassword">FORGOT YOUR PASSWORD?</a>
                             </div>
 
                             <button 

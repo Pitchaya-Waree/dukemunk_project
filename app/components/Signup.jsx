@@ -1,7 +1,6 @@
 'use client';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-// ⚠️ อย่าลืมแก้ Path ของ supabaseClient ให้ตรงกับโปรเจกต์คุณ
 import { supabase } from '@/supabaseClient';
 import './Signup.css';
 
@@ -65,7 +64,7 @@ export default function Signup() {
 
                     {/* ข้อมูลร้าน (ฝั่งซ้าย) */}
                     <div className="restaurant-info">
-                        <h1 className="brand-logo">DUKE MUNK</h1>
+                        <a href="/" className="brand-logo">DUKE MUNK</a>
                         <p className="brand-sub">ดุกมั้ง</p>
                         <div className="details-text">
                             <p>ดุกมั้ง - DUKE MUNK</p>

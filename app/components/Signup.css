@@ -1,5 +1,3 @@
-/* Signup.css */
-
 .signup-page-container {
   min-height: 100vh;
   /* เปลี่ยน URL รูปภาพให้ตรงกับโปรเจกต์ของคุณ */
@@ -12,7 +10,10 @@
 
 .signup-overlay {
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background-color: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
@@ -24,7 +25,8 @@
   display: flex;
   align-items: center;
   gap: 40px;
-  max-width: 1000px; /* ขยายให้กว้างขึ้นกว่าหน้า Login */
+  max-width: 1000px;
+  /* ขยายให้กว้างขึ้นกว่าหน้า Login */
   width: 100%;
 }
 
@@ -37,17 +39,34 @@
   flex-direction: column;
   align-items: flex-end;
 }
-.brand-logo { font-size: 3rem; font-weight: bold; color: #f1c40f; margin: 0; font-family: serif; }
-.brand-sub { font-size: 1.2rem; margin-top: -5px; margin-bottom: 40px; }
-.details-text { font-size: 0.9rem; line-height: 1.5; }
+
+.brand-logo {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #f1c40f;
+  margin: 0;
+  font-family: serif;
+}
+
+.brand-sub {
+  font-size: 1.2rem;
+  margin-top: 5px;
+  margin-bottom: 40px;
+}
+
+.details-text {
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
 
 /* กล่อง Register */
 .register-card {
   background-color: white;
   border-radius: 16px;
   padding: 40px 32px;
-  width: 550px; /* กว้างกว่ากล่อง Login เพื่อให้พอดีกับ 2 คอลัมน์ */
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  width: 550px;
+  /* กว้างกว่ากล่อง Login เพื่อให้พอดีกับ 2 คอลัมน์ */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   color: #333;
 }
 
@@ -139,12 +158,13 @@
 /* ปุ่ม Confirm */
 .btn-wrapper {
   display: flex;
-  justify-content: flex-end; /* ดันปุ่มไปทางขวาตามรูป */
+  justify-content: flex-end;
+  /* ดันปุ่มไปทางขวาตามรูป */
   margin-top: 30px;
 }
 
 .btn-confirm {
-  background-color: #f39c12; 
+  background-color: #f39c12;
   color: white;
   border: none;
   padding: 10px 32px;
@@ -172,14 +192,41 @@
   text-align: center;
   font-size: 0.85rem;
 }
-.message-error { background-color: #fee2e2; color: #b91c1c; border: 1px solid #f87171; }
-.message-success { background-color: #dcfce7; color: #15803d; border: 1px solid #4ade80; }
+
+.message-error {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #f87171;
+}
+
+.message-success {
+  background-color: #dcfce7;
+  color: #15803d;
+  border: 1px solid #4ade80;
+}
 
 @media (max-width: 768px) {
-  .signup-content-wrapper { flex-direction: column; }
-  .restaurant-info { text-align: center; align-items: center; }
-  .register-card { width: 100%; max-width: 500px; padding: 24px; }
-  .form-grid { grid-template-columns: 1fr; gap: 16px; } /* มือถือให้เรียงคอลัมน์เดียว */
+  .signup-content-wrapper {
+    flex-direction: column;
+  }
+
+  .restaurant-info {
+    text-align: center;
+    align-items: center;
+  }
+
+  .register-card {
+    width: 100%;
+    max-width: 500px;
+    padding: 24px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  /* มือถือให้เรียงคอลัมน์เดียว */
 }
 
 .Login {
