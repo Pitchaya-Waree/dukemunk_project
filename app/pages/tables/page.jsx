@@ -7,7 +7,7 @@ import Reservation from '@/components/Reservation';
 import Footer from '@/components/Footer';
 import Tables from '@/components/Tables';
 
-export default function table() {
+export default function TablesPage() {
 
   return (
     <main>

@@ -7,7 +7,7 @@ import Reservation from '@/components/Reservation';
 import Footer from '@/components/Footer';
 import Maps from '@/components/Maps';
 
-export default function maps() {
+export default function MapsPage() {
 
   return (
     <main>
