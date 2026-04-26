@@ -59,7 +59,7 @@ export default function LoginPage() {
                         </div>
                     </div>
 
-                    {/* กล่อง Login */}
+                    // login form
                     <div className="login-card">
                         <h2 className="login-title">Login</h2>
 
@@ -99,7 +99,7 @@ export default function LoginPage() {
                                 </div>
                             </div>
 
-                            {/* แสดงข้อความ Error กรณีรหัสผิด */}
+                            // error catch
                             {errorMsg && (
                                 <div style={{ color: '#e74c3c', fontSize: '0.85rem', marginBottom: '16px', textAlign: 'center' }}>
                                     {errorMsg === 'Invalid login credentials' ? 'อีเมลหรือรหัสผ่านไม่ถูกต้อง' : errorMsg}
