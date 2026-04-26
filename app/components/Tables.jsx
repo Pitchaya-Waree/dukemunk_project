@@ -1,10 +1,14 @@
-import React from 'react';
+'use client';
+import React, { useState, useEffect } from 'react';
+// ⚠️ อย่าลืมแก้ Path ของ supabaseClient ให้ตรงกับโฟลเดอร์ในโปรเจกต์ของคุณ
+import { supabase } from '@/supabaseClient'; 
 import './Tables.css';
 
 // Component สำหรับสร้างโต๊ะ 1 ตัว
 const TableComponent = ({ name, seats, shape, status }) => {
   const shapeClass = shape === 'round' ? 'table-round' : shape === 'vip' ? 'table-vip' : 'table-square';
-  const statusClass = `status-${status}`;
+  // กำหนดสถานะเริ่มต้นเป็น available เพื่อให้โต๊ะแสดงสีเขียว
+  const statusClass = `status-${status || 'available'}`;
 
   return (
     <div className={`table ${shapeClass} ${statusClass}`}>
@@ -16,53 +20,59 @@ const TableComponent = ({ name, seats, shape, status }) => {
 
 // Component หลักสำหรับแสดงแผนผังทั้งหมด
 export default function Table() {
-  const row1 = [
-    { id: 1, name: 'Table 1', seats: 2, shape: 'round', status: 'available' },
-    { id: 2, name: 'Table 2', seats: 2, shape: 'round', status: 'occupied' },
-    { id: 3, name: 'Table 3', seats: 2, shape: 'round', status: 'available' },
-    { id: 4, name: 'Table 4', seats: 2, shape: 'round', status: 'reserved' },
-    { id: 5, name: 'Table 5', seats: 2, shape: 'round', status: 'available' },
-  ];
-  
-  const row2 = [
-    { id: 6, name: 'Table 6', seats: 4, shape: 'square', status: 'available' },
-    { id: 7, name: 'Table 7', seats: 4, shape: 'square', status: 'available' },
-    { id: 8, name: 'Table 8', seats: 4, shape: 'square', status: 'reserved' },
-    { id: 9, name: 'Table 9', seats: 4, shape: 'square', status: 'available' },
-  ];
+  const [tablesData, setTablesData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const row3 = [
-    { id: 10, name: 'Table 10', seats: 4, shape: 'square', status: 'available' },
-    { id: 11, name: 'Table 11', seats: 4, shape: 'square', status: 'available' },
-    { id: 12, name: 'Table 12', seats: 4, shape: 'square', status: 'occupied' },
-    { id: 13, name: 'Table 13', seats: 4, shape: 'square', status: 'available' },
-  ];
+  useEffect(() => {
+    const fetchTables = async () => {
+      try {
+        // ดึงข้อมูลทั้งหมดจากตาราง 'tables'
+        const { data, error } = await supabase
+          .from('tables')
+          .select('*');
 
-  const row4 = [
-    { id: 14, name: 'VIP 1', seats: 6, shape: 'vip', status: 'available' },
-    { id: 15, name: 'VIP 2', seats: 6, shape: 'vip', status: 'available' },
-    { id: 16, name: 'VIP 3', seats: 8, shape: 'vip', status: 'reserved' },
-  ];
+        if (error) throw error;
+
+        if (data) {
+          // จัดเรียงข้อมูลแบบธรรมชาติ (Natural Sort) เพื่อให้ Table 2 มาก่อน Table 10
+          const sortedData = data.sort((a, b) => 
+            a.table_name.localeCompare(b.table_name, undefined, { numeric: true })
+          );
+          setTablesData(sortedData);
+        }
+      } catch (error) {
+        console.error('Error fetching tables:', error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTables();
+  }, []);
 
   return (
-    // เพิ่ม div คลุมด้านนอกสุดเพื่อจัดกึ่งกลางเต็มหน้าจอ
     <div className="page-container">
       <div className="right-panel">
         <h2 className="panel-title">Restaurant Floor Plan</h2>
         
         <div className="floor-plan-grid">
-          <div className="table-row">
-            {row1.map(t => <TableComponent key={t.id} {...t} />)}
-          </div>
-          <div className="table-row">
-            {row2.map(t => <TableComponent key={t.id} {...t} />)}
-          </div>
-          <div className="table-row">
-            {row3.map(t => <TableComponent key={t.id} {...t} />)}
-          </div>
-          <div className="table-row">
-            {row4.map(t => <TableComponent key={t.id} {...t} />)}
-          </div>
+          {loading ? (
+            <div style={{ color: '#aaa', padding: '40px' }}>Loading tables from database...</div>
+          ) : (
+            // วนลูปข้อมูลทั้งหมดใน <div className="table-row"> เดียว 
+            // ระบบ CSS flex-wrap: wrap ที่มีอยู่แล้วจะช่วยปัดบรรทัดโต๊ะให้สวยงามอัตโนมัติ
+            <div className="table-row">
+              {tablesData.map(t => (
+                <TableComponent 
+                  key={t.id} 
+                  name={t.table_name} // ใช้ table_name ให้ตรงกับชื่อคอลัมน์ในฐานข้อมูล
+                  seats={t.seats} 
+                  shape={t.shape} 
+                  status="available" // ใส่ default เป็นว่างไปก่อนสำหรับหน้านี้
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
