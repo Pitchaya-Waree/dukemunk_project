@@ -7,7 +7,7 @@ import './Tables.css';
 // Component สำหรับสร้างโต๊ะ 1 ตัว
 const TableComponent = ({ name, seats, shape, status }) => {
   const shapeClass = shape === 'round' ? 'table-round' : shape === 'vip' ? 'table-vip' : 'table-square';
-  // กำหนดสถานะเริ่มต้นเป็น available เพื่อให้โต๊ะแสดงสีเขียว
+  // นำ status ที่เช็คแล้วมาใส่เป็นคลาสสี (available = เขียว, reserved = เหลือง, occupied = แดง)
   const statusClass = `status-${status || 'available'}`;
 
   return (
@@ -18,62 +18,124 @@ const TableComponent = ({ name, seats, shape, status }) => {
   );
 };
 
-// Component หลักสำหรับแสดงแผนผังทั้งหมด
 export default function Table() {
   const [tablesData, setTablesData] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // States สำหรับค้นหาสถานะ
+  const [filterDate, setFilterDate] = useState('');
+  const [filterTime, setFilterTime] = useState('11:00'); // Default เป็นรอบแรก
+
+  // ตั้งค่าวันที่เริ่มต้นให้เป็นวันปัจจุบัน
   useEffect(() => {
-    const fetchTables = async () => {
+    const now = new Date();
+    setFilterDate(now.toLocaleDateString('en-CA')); // รูปแบบ YYYY-MM-DD
+  }, []);
+
+  // ดึงข้อมูลโต๊ะ และข้อมูลการจอง เมื่อวันที่หรือเวลาถูกเปลี่ยน
+  useEffect(() => {
+    const fetchTablesAndStatus = async () => {
+      if (!filterDate) return; // ถ้ายังไม่มีวันที่ ให้รอไปก่อน
+      setLoading(true);
+
       try {
-        // ดึงข้อมูลทั้งหมดจากตาราง 'tables'
-        const { data, error } = await supabase
+        // 1. ดึงข้อมูลโต๊ะทั้งหมด
+        const { data: tables, error: tablesError } = await supabase
           .from('tables')
           .select('*');
 
-        if (error) throw error;
+        if (tablesError) throw tablesError;
 
-        if (data) {
-          // จัดเรียงข้อมูลแบบธรรมชาติ (Natural Sort) เพื่อให้ Table 2 มาก่อน Table 10
-          const sortedData = data.sort((a, b) => 
+        // 2. ดึงข้อมูลการจอง "เฉพาะวันที่และเวลาที่เลือก"
+        const { data: reservations, error: resError } = await supabase
+          .from('reservations')
+          .select('*')
+          .eq('reservation_date', filterDate)
+          .eq('reservation_time', filterTime); // ดึงเฉพาะเวลา 11:00 หรือ 17:00
+
+        if (resError) throw resError;
+
+        // 3. นำข้อมูลโต๊ะ มาเทียบกับการจองเพื่อหาสถานะ
+        if (tables) {
+          const tablesWithStatus = tables.map(table => {
+            // หาว่าโต๊ะตัวนี้ มีคนจองในรอบเวลานี้หรือไม่
+            const booking = reservations.find(res => res.table_id === table.id);
+            
+            return {
+              ...table,
+              // ถ้ามีข้อมูลการจอง ให้ใช้สถานะจากตาราง reservations, ถ้าไม่มีแปลว่าว่าง (available)
+              status: booking ? booking.status : 'available'
+            };
+          });
+
+          // จัดเรียงข้อมูลแบบธรรมชาติ (Natural Sort)
+          const sortedData = tablesWithStatus.sort((a, b) => 
             a.table_name.localeCompare(b.table_name, undefined, { numeric: true })
           );
+          
           setTablesData(sortedData);
         }
       } catch (error) {
-        console.error('Error fetching tables:', error.message);
+        console.error('Error fetching data:', error.message);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchTables();
-  }, []);
+    fetchTablesAndStatus();
+  }, [filterDate, filterTime]); // 👈 useEffect จะทำงานใหม่ทุกครั้งที่ Date หรือ Time เปลี่ยน
 
   return (
     <div className="page-container">
       <div className="right-panel">
         <h2 className="panel-title">Restaurant Floor Plan</h2>
+
+        {/* --- ส่วนแถบเครื่องมือสำหรับเลือกวันและเวลา --- */}
+        <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', marginBottom: '30px', flexWrap: 'wrap' }}>
+          
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <label style={{ color: '#e0e0e0', fontWeight: 'bold' }}>Date:</label>
+            <input 
+              type="date" 
+              value={filterDate} 
+              onChange={(e) => setFilterDate(e.target.value)}
+              style={{ padding: '8px 12px', borderRadius: '8px', border: '1px solid #333', backgroundColor: '#111', color: 'white' }}
+            />
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <label style={{ color: '#e0e0e0', fontWeight: 'bold' }}>Time:</label>
+            <select 
+              value={filterTime} 
+              onChange={(e) => setFilterTime(e.target.value)}
+              style={{ padding: '8px 12px', borderRadius: '8px', border: '1px solid #333', backgroundColor: '#111', color: 'white' }}
+            >
+              <option value="11:00">11:00 AM - 02:00 PM</option>
+              <option value="17:00">05:00 PM - 08:00 PM</option>
+            </select>
+          </div>
+
+        </div>
+        {/* -------------------------------------- */}
         
         <div className="floor-plan-grid">
           {loading ? (
-            <div style={{ color: '#aaa', padding: '40px' }}>Loading tables from database...</div>
+            <div style={{ color: '#aaa', padding: '40px' }}>Loading tables status...</div>
           ) : (
-            // วนลูปข้อมูลทั้งหมดใน <div className="table-row"> เดียว 
-            // ระบบ CSS flex-wrap: wrap ที่มีอยู่แล้วจะช่วยปัดบรรทัดโต๊ะให้สวยงามอัตโนมัติ
             <div className="table-row">
               {tablesData.map(t => (
                 <TableComponent 
                   key={t.id} 
-                  name={t.table_name} // ใช้ table_name ให้ตรงกับชื่อคอลัมน์ในฐานข้อมูล
+                  name={t.table_name} 
                   seats={t.seats} 
                   shape={t.shape} 
-                  status="available" // ใส่ default เป็นว่างไปก่อนสำหรับหน้านี้
+                  status={t.status} // 👈 ส่ง status จริงๆ ที่คำนวณมาแล้วไปแสดงผล
                 />
               ))}
             </div>
           )}
         </div>
+
       </div>
     </div>
   );
