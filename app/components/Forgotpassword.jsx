@@ -18,7 +18,6 @@ export default function ForgotPassword() {
 
         // ส่งคำสั่งรีเซ็ตรหัสผ่านไปยัง Supabase
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            // (ทางเลือก) คุณสามารถกำหนดหน้าให้กลับมาหลังจากกดลิงก์ในอีเมลได้
             // redirectTo: `${window.location.origin}/pages/reset-password`, 
         });
 
@@ -70,7 +69,7 @@ export default function ForgotPassword() {
                     </form>
 
                     <div className="back-to-login">
-                        {/* ⚠️ เปลี่ยน Path ตรง href ให้ตรงกับหน้า Login ของคุณ */}
+                        {/* เปลี่ยน Path ตรง href ให้ตรงกับหน้า Login ของคุณ */}
                         <a href="/pages/login">← BACK TO LOGIN</a>
                     </div>
                 </div>
