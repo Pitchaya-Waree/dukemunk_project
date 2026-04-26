@@ -27,8 +27,8 @@ export default function SignupPage() {
         setErrorMsg(null);
         setSuccessMsg(null);
 
-        // รวมชื่อและนามสกุลเป็น full_name
-        const fullName = `${firstName} ${lastName}`.trim();
+        // ตัดตัวอักษรที่ไม่ใช่ตัวเลขออก เพื่อให้สอดคล้องกับ DataType int8 ในฐานข้อมูล
+        const formattedPhone = phone.replace(/\D/g, '');
 
         // ส่งข้อมูลสมัครสมาชิกไปยัง Supabase
         const { data, error } = await supabase.auth.signUp({
@@ -36,8 +36,9 @@ export default function SignupPage() {
             password: password,
             options: {
                 data: {
-                    full_name: fullName,       // ส่ง full_name ไปเพื่อให้ Trigger เอาไปลงตาราง profiles
-                    phone_number: phone,       // ส่งเบอร์โทรไปเก็บไว้ใน meta_data (เผื่อใช้งาน)
+                    firstname: firstName,       // ส่ง firstname แยก
+                    lastname: lastName,         // ส่ง lastname แยก
+                    phone_number: formattedPhone // ส่งเบอร์โทรที่เป็นตัวเลขล้วน
                 }
             }
         });
@@ -46,12 +47,8 @@ export default function SignupPage() {
             setErrorMsg(error.message);
             setLoading(false);
         } else {
-            // สมัครสำเร็จ
             setSuccessMsg('Registration successful! Please check your email to verify your account.');
             setLoading(false);
-            
-            // กรณีที่ตั้งค่า Supabase ให้ไม่ต้องกดยืนยันอีเมล สามารถสั่งเปลี่ยนหน้าได้เลย
-            // setTimeout(() => router.push('/pages/login'), 2000); 
         }
     };
 
@@ -119,8 +116,7 @@ export default function SignupPage() {
                                 <div className="input-group">
                                     <label className="input-label">Phone Number *</label>
                                     <div className="phone-input-container">
-                                        {/* จำลองธงและรหัสประเทศ */}
-                                        <div className="country-code">🇹🇭 +66</div>
+                                        <div className="country-code">+66</div>
                                         <input 
                                             type="tel" 
                                             className="phone-input" 
@@ -133,7 +129,7 @@ export default function SignupPage() {
                                 </div>
                             </div>
 
-                            {/* แถวที่ 3: รหัสผ่าน (กินพื้นที่เต็มบรรทัด) */}
+                            {/* แถวที่ 3: รหัสผ่าน */}
                             <div className="input-group" style={{ marginBottom: '20px' }}>
                                 <label className="input-label">Password (Login Password) *</label>
                                 <div className="input-field-wrapper">
@@ -144,7 +140,7 @@ export default function SignupPage() {
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                         required
-                                        minLength="6" // Supabase บังคับขั้นต่ำ 6 ตัวอักษร
+                                        minLength="6"
                                     />
                                     <span 
                                         className="eye-icon" 
