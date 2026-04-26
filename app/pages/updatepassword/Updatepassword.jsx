@@ -3,7 +3,7 @@ import UpdatePassword from '@/components/Updatepassword';
 import React from 'react';
 
 
-export default function updatepassword() {
+export default function UpdatePasswordPage() {
 
   return (
     <main>
