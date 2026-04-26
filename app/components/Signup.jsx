@@ -1,70 +1,86 @@
 'use client';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { supabase } from '@/supabaseClient';
 import './Signup.css';
 
 export default function Signup() {
     const router = useRouter();
 
-    // States สำหรับเก็บค่าฟอร์ม
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
-    const [password, setPassword] = useState('');
+    // รวบรวมข้อมูลฟอร์มไว้ใน Object เดียว เพื่อง่ายต่อการจัดการและลดจำนวน State
+    const [formData, setFormData] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        password: ''
+    });
+
+    // State ควบคุมการแสดงรหัสผ่าน (true = โชว์เป็นตัวหนังสือ, false = ซ่อนเป็นจุด)
     const [showPassword, setShowPassword] = useState(false);
 
-    // States สำหรับสถานะระบบ
-    const [loading, setLoading] = useState(false);
-    const [errorMsg, setErrorMsg] = useState(null);
-    const [successMsg, setSuccessMsg] = useState(null);
+    // State UI States
+    const [loading, setLoading] = useState(false); // สถานะกำลังโหลดตอนกดปุ่ม
+    const [errorMsg, setErrorMsg] = useState(null); // เก็บข้อความแจ้งเตือนเมื่อเกิดข้อผิดพลาด
+    const [successMsg, setSuccessMsg] = useState(null); // เก็บข้อความเมื่อสมัครสำเร็จ
 
+    // ฟังก์ชันจัดการเมื่อผู้ใช้พิมพ์ข้อความ 
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    // ฟังก์ชันหลักเมื่อกดปุ่ม Confirm สมัครสมาชิก
     const handleSignup = async (e) => {
         e.preventDefault();
         setLoading(true);
         setErrorMsg(null);
         setSuccessMsg(null);
 
-        // ตัดตัวอักษรที่ไม่ใช่ตัวเลขออก เพื่อให้สอดคล้องกับ DataType int8 ในฐานข้อมูล
-        const formattedPhone = phone.replace(/\D/g, '');
+        // ตัดตัวอักษรที่ไม่ใช่ตัวเลขออกให้เหลือแต่ตัวเลขล้วน
+        const formattedPhone = formData.phone.replace(/\D/g, '');
 
-        // ส่งข้อมูลสมัครสมาชิกไปยัง Supabase
-        const { data, error } = await supabase.auth.signUp({
-            email: email,
-            password: password,
-            options: {
-                data: {
-                    firstname: firstName,       // ส่ง firstname แยก
-                    lastname: lastName,         // ส่ง lastname แยก
-                    phone_number: formattedPhone // ส่งเบอร์โทรที่เป็นตัวเลขล้วน
+        try {
+            // ส่งข้อมูลไปยัง Supabase
+            const { error } = await supabase.auth.signUp({
+                email: formData.email,
+                password: formData.password,
+                options: {
+                    data: {
+                        firstname: formData.firstName,
+                        lastname: formData.lastName,
+                        phone_number: formattedPhone 
+                    }
                 }
-            }
-        });
+            });
 
-        if (error) {
-            setErrorMsg(error.message);
-            setLoading(false);
-        } else {
-            // เปลี่ยนข้อความแจ้งเตือนเล็กน้อยให้รู้ว่าจะเปลี่ยนหน้า
+            if (error) throw error; // ถ้ามี Error โยนไปเข้าบล็อก catch ด้านล่าง
+
+            // หากสำเร็จ
             setSuccessMsg('Registration successful! Redirecting to login page...');
-            setLoading(false);
-
-            // เปลี่ยนไปหน้า Login 
+            
+            // หน่วงเวลา 2 วินาทีแล้วเด้งไปหน้า Login
             setTimeout(() => {
                 router.push('/pages/login');
             }, 2000);
+
+        } catch (error) {
+            setErrorMsg(error.message); // แสดงข้อความ Error ให้ผู้ใช้เห็น
+        } finally {
+            setLoading(false); // ปิดสถานะโหลดเสมอ (ไม่ว่าจะสำเร็จหรือล้มเหลว)
         }
     };
 
+    // 3. RENDER UI (การวาดหน้าจอ)
     return (
         <div className="signup-page-container">
             <div className="signup-overlay">
                 <div className="signup-content-wrapper">
 
-                    {/* ข้อมูลร้าน (ฝั่งซ้าย) */}
+                    {/* --- ข้อมูลร้าน (ฝั่งซ้าย) --- */}
                     <div className="restaurant-info">
-                        <a href="/" className="brand-logo">DUKE MUNK</a>
+                        <Link href="/" className="brand-logo">DUKE MUNK</Link>
                         <p className="brand-sub">ดุกมั้ง</p>
                         <div className="details-text">
                             <p>ดุกมั้ง - DUKE MUNK</p>
@@ -73,7 +89,7 @@ export default function Signup() {
                         </div>
                     </div>
 
-                    {/* กล่อง Register (ฝั่งขวา) */}
+                    {/* --- กล่อง Register (ฝั่งขวา) --- */}
                     <div className="register-card">
                         <h2 className="register-title">Register</h2>
 
@@ -85,10 +101,11 @@ export default function Signup() {
                                     <label className="input-label">First Name *</label>
                                     <input
                                         type="text"
+                                        name="firstName" // ต้องตั้งชื่อให้ตรงกับ Key ใน formData
                                         className="register-input"
                                         placeholder="Enter your First Name"
-                                        value={firstName}
-                                        onChange={(e) => setFirstName(e.target.value)}
+                                        value={formData.firstName}
+                                        onChange={handleChange}
                                         required
                                     />
                                 </div>
@@ -96,10 +113,11 @@ export default function Signup() {
                                     <label className="input-label">Last Name *</label>
                                     <input
                                         type="text"
+                                        name="lastName"
                                         className="register-input"
                                         placeholder="Enter your Last Name"
-                                        value={lastName}
-                                        onChange={(e) => setLastName(e.target.value)}
+                                        value={formData.lastName}
+                                        onChange={handleChange}
                                         required
                                     />
                                 </div>
@@ -111,10 +129,11 @@ export default function Signup() {
                                     <label className="input-label">Email Address *</label>
                                     <input
                                         type="email"
+                                        name="email"
                                         className="register-input"
                                         placeholder="Enter your Email"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
+                                        value={formData.email}
+                                        onChange={handleChange}
                                         required
                                     />
                                 </div>
@@ -124,10 +143,11 @@ export default function Signup() {
                                         <div className="country-code">+66</div>
                                         <input
                                             type="tel"
+                                            name="phone"
                                             className="phone-input"
                                             placeholder="Your Phone Number"
-                                            value={phone}
-                                            onChange={(e) => setPhone(e.target.value)}
+                                            value={formData.phone}
+                                            onChange={handleChange}
                                             required
                                         />
                                     </div>
@@ -140,10 +160,11 @@ export default function Signup() {
                                 <div className="input-field-wrapper">
                                     <input
                                         type={showPassword ? "text" : "password"}
+                                        name="password"
                                         className="register-input"
                                         placeholder="Enter your password"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
+                                        value={formData.password}
+                                        onChange={handleChange}
                                         required
                                         minLength="6"
                                     />
@@ -156,13 +177,13 @@ export default function Signup() {
                                 </div>
                             </div>
 
-                            {/* แสดงข้อความ Error / Success */}
+                            {/* กล่องแสดงข้อความ Error / Success */}
                             {errorMsg && <div className="message-box message-error">{errorMsg}</div>}
                             {successMsg && <div className="message-box message-success">{successMsg}</div>}
 
-                            {/* Login   */}
+                            {/* ลิงก์ไปหน้า Login */}
                             <div className="Login">
-                                <a href="/pages/login">Already have an account? Login here</a>
+                                <Link href="/pages/login">Already have an account? Login here</Link>
                             </div>
 
                             {/* ปุ่ม Confirm */}

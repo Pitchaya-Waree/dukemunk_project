@@ -1,40 +1,52 @@
 'use client';
 import React, { useState } from 'react';
-import { supabase } from '@/supabaseClient'; 
+import Link from 'next/link';
+import { supabase } from '@/supabaseClient';
 import './Forgotpassword.css';
 
 export default function ForgotPassword() {
-    const [email, setEmail] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [errorMsg, setErrorMsg] = useState(null);
-    const [successMsg, setSuccessMsg] = useState(null);
+    // Form State
+    const [email, setEmail] = useState(''); // เก็บค่าอีเมลที่ผู้ใช้พิมพ์ลงในช่อง
 
+    // UI States 
+    const [loading, setLoading] = useState(false); // ควบคุมปุ่มกด (true = ปิดปุ่มและขึ้นว่า Sending...)
+    const [errorMsg, setErrorMsg] = useState(null); // เก็บข้อความสีแดงเมื่อเกิดข้อผิดพลาด
+    const [successMsg, setSuccessMsg] = useState(null); // เก็บข้อความสีเขียวเมื่อส่งอีเมลสำเร็จ
+
+    // ฟังก์ชันสำหรับส่งคำสั่ง Reset Password ไปยัง Supabase
     const handleResetPassword = async (e) => {
         e.preventDefault();
         setLoading(true);
         setErrorMsg(null);
         setSuccessMsg(null);
 
-        // ส่งคำสั่งรีเซ็ตรหัสผ่านไปยัง Supabase
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            // redirectTo: `${window.location.origin}/pages/reset-password`, 
-        });
+        try {
+            // ส่งคำสั่งรีเซ็ตรหัสผ่านพร้อมแนบอีเมล
+            const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                redirectTo: `${window.location.origin}/pages/login`, // หลังจากคลิกลิงก์ในอีเมลแล้วจะพาไปที่หน้า Login
+            });
 
-        if (error) {
-            setErrorMsg(error.message);
-        } else {
+            if (error) throw error; // ถ้าระบบ Supabase แจ้ง Error ให้โยนไปเข้าบล็อก catch
+
+            // กรณีสำเร็จ
             setSuccessMsg('Password reset link sent! Please check your email inbox.');
-            setEmail(''); // เคลียร์ช่องพิมพ์อีเมล
+            setEmail(''); // เคลียร์ช่องพิมพ์อีเมลให้ว่าง
+
+        } catch (error) {
+            // กรณีล้มเหลว (เช่น Rate limit, อีเมลผิดรูปแบบ)
+            setErrorMsg(error.message);
+        } finally {
+            // ปิดสถานะกำลังโหลดเสมอ เพื่อให้ปุ่มกลับมาคลิกได้อีกครั้ง
+            setLoading(false);
         }
-        
-        setLoading(false);
     };
 
+    // RENDER UI (การวาดหน้าจอ)
     return (
         <div className="forgot-page-container">
             <div className="forgot-overlay">
-                
-                {/* กล่อง Forgot Password แบบจัดกึ่งกลาง */}
+
+                {/*Forgot Password*/}
                 <div className="forgot-card">
                     <h2 className="forgot-title">Forgot Password?</h2>
                     <p className="forgot-subtitle">
@@ -44,9 +56,9 @@ export default function ForgotPassword() {
                     <form onSubmit={handleResetPassword}>
                         <div className="input-group">
                             <label className="input-label">Email Address *</label>
-                            <input 
-                                type="email" 
-                                className="forgot-input" 
+                            <input
+                                type="email"
+                                className="forgot-input"
                                 placeholder="Enter your Email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
@@ -54,22 +66,21 @@ export default function ForgotPassword() {
                             />
                         </div>
 
-                        {/* แสดงข้อความ Error / Success */}
+                        {/* กล่องแสดงข้อความ Error / Success */}
                         {errorMsg && <div className="message-box message-error">{errorMsg}</div>}
                         {successMsg && <div className="message-box message-success">{successMsg}</div>}
 
-                        <button 
-                            type="submit" 
+                        <button
+                            type="submit"
                             className="btn-send"
-                            disabled={loading || !email}
+                            disabled={loading || !email} // ปิดปุ่มถ้ากำลังโหลดอยู่ หรือยังไม่ได้พิมพ์อีเมล
                         >
                             {loading ? 'Sending...' : 'Send Reset Link'}
                         </button>
                     </form>
 
                     <div className="back-to-login">
-                        {/* เปลี่ยน Path ตรง href ให้ตรงกับหน้า Login ของคุณ */}
-                        <a href="/pages/login">← BACK TO LOGIN</a>
+                        <Link href="/pages/login">← BACK TO LOGIN</Link>
                     </div>
                 </div>
 

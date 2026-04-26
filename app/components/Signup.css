@@ -1,6 +1,6 @@
+/* LAYOUT & BACKGROUND */
 .signup-page-container {
   min-height: 100vh;
-  /* เปลี่ยน URL รูปภาพให้ตรงกับโปรเจกต์ของคุณ */
   background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070&auto=format&fit=crop');
   background-size: cover;
   background-position: center;
@@ -26,11 +26,10 @@
   align-items: center;
   gap: 40px;
   max-width: 1000px;
-  /* ขยายให้กว้างขึ้นกว่าหน้า Login */
   width: 100%;
 }
 
-/* ข้อมูลร้าน */
+/* BRANDING INFO  */
 .restaurant-info {
   flex: 1;
   color: white;
@@ -46,6 +45,8 @@
   color: #f1c40f;
   margin: 0;
   font-family: serif;
+  text-decoration: none;
+  /* เอาขีดเส้นใต้ออกเมื่อใช้แท็ก Link */
 }
 
 .brand-sub {
@@ -59,13 +60,12 @@
   line-height: 1.5;
 }
 
-/* กล่อง Register */
+/* REGISTER CARD  */
 .register-card {
   background-color: white;
   border-radius: 16px;
   padding: 40px 32px;
   width: 550px;
-  /* กว้างกว่ากล่อง Login เพื่อให้พอดีกับ 2 คอลัมน์ */
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   color: #333;
 }
@@ -78,7 +78,7 @@
   color: #333;
 }
 
-/* จัด Layout แบบ 2 คอลัมน์ */
+/* FORM ELEMENTS */
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -98,7 +98,6 @@
   color: #555;
 }
 
-/* สไตล์ Input แบบกล่องขอบมนตามภาพ */
 .register-input {
   width: 100%;
   border: 1px solid #ddd;
@@ -128,7 +127,7 @@
   font-size: 1.1rem;
 }
 
-/* ช่องเบอร์โทรศัพท์ (มี +66 ด้านหน้า) */
+/* Phone Input Container */
 .phone-input-container {
   display: flex;
   border: 1px solid #ddd;
@@ -155,11 +154,28 @@
   outline: none;
 }
 
-/* ปุ่ม Confirm */
+/* BUTTONS & LINKS */
+.Login {
+  text-align: right;
+  margin-bottom: 24px;
+}
+
+.Login a {
+  font-size: 0.7rem;
+  color: #999;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: color 0.2s;
+}
+
+.Login a:hover {
+  color: #f39c12;
+}
+
 .btn-wrapper {
   display: flex;
   justify-content: flex-end;
-  /* ดันปุ่มไปทางขวาตามรูป */
   margin-top: 30px;
 }
 
@@ -184,7 +200,7 @@
   cursor: not-allowed;
 }
 
-/* ข้อความแจ้งเตือน */
+/* ALERTS & RESPONSIVE */
 .message-box {
   margin-top: 16px;
   padding: 10px;
@@ -205,6 +221,7 @@
   border: 1px solid #4ade80;
 }
 
+/* Mobile Responsive */
 @media (max-width: 768px) {
   .signup-content-wrapper {
     flex-direction: column;
@@ -225,19 +242,4 @@
     grid-template-columns: 1fr;
     gap: 16px;
   }
-
-  /* มือถือให้เรียงคอลัมน์เดียว */
-}
-
-.Login {
-  text-align: right;
-  margin-bottom: 24px;
-}
-
-.Login a {
-  font-size: 0.7rem;
-  color: #999;
-  text-decoration: none;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
