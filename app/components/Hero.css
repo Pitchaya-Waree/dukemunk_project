@@ -1,0 +1,27 @@
+.hero {
+  height: 93vh;
+  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+              url('https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1600');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  margin-bottom: -50px;
+}
+
+.hero-content h1 {
+  font-size: 60px;
+  color: #c5a059;
+  margin-bottom: 20px;
+  font-family: 'Playfair Display', serif;
+}
+
+.hero-content p {
+  font-size: 20px;
+  margin-bottom: 30px;
+  font-weight: 300;
+  color: #c5a059;
+}

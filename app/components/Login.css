@@ -1,0 +1,195 @@
+/* login.css */
+
+/* ครอบทั้งหน้าจอ และใส่รูปพื้นหลัง */
+.login-page-container {
+  min-height: 100vh;
+  /* เปลี่ยน URL ด้านล่างเป็นที่อยู่รูปพื้นหลังร้านของคุณ */
+  background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070&auto=format&fit=crop');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  font-family: sans-serif;
+}
+
+/* แผ่นฟิล์มสีดำโปร่งแสงทับรูปภาพ เพื่อให้ตัวหนังสืออ่านง่ายขึ้น */
+.login-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* กล่องที่คลุมทั้งข้อมูลซ้ายและขวา */
+.login-content-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  max-width: 900px;
+  width: 100%;
+}
+
+/* ข้อมูลร้านอาหาร */
+.restaurant-info {
+  flex: 1;
+  color: white;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.brand-logo {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #f1c40f;
+  margin: 0;
+  font-family: serif;
+}
+
+.brand-sub {
+  font-size: 1.2rem;
+  margin-top: 5px;
+  margin-bottom: 40px;
+}
+
+.details-text {
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.visit-stats {
+  margin-top: 20px;
+  font-size: 0.8rem;
+  color: #f1c40f;
+}
+
+.visit-stats strong {
+  font-size: 1.2rem;
+}
+
+/* กล่องฟอร์ม Login สีขาว */
+.login-card {
+  background-color: white;
+  border-radius: 16px;
+  padding: 40px 32px;
+  width: 400px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  color: #333;
+}
+
+.login-title {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.input-group {
+  margin-bottom: 20px;
+}
+
+.input-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #111;
+}
+
+.input-field-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Input แบบเส้นขีดล่าง */
+.login-input {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #ddd;
+  padding: 8px 0;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.login-input:focus {
+  border-bottom: 1px solid #f39c12;
+}
+
+.login-input::placeholder {
+  color: #aaa;
+  font-size: 0.85rem;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 0;
+  cursor: pointer;
+  color: #888;
+  font-size: 1.1rem;
+}
+
+.forgot-password {
+  text-align: right;
+  margin-bottom: 24px;
+}
+
+.forgot-password a {
+  font-size: 0.7rem;
+  color: #999;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-login {
+  width: 100%;
+  background-color: #f39c12; /* สีส้มตามแบบ */
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 24px; /* ทำปุ่มโค้งมน */
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: background-color 0.2s;
+}
+
+.btn-login:hover {
+  background-color: #e67e22;
+}
+
+.signup-link {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.signup-link a {
+  color: #f39c12;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* ทำให้รองรับหน้าจอมือถือ (Responsive) */
+@media (max-width: 768px) {
+  .login-content-wrapper {
+    flex-direction: column;
+    justify-content: center;
+  }
+  .restaurant-info {
+    text-align: center;
+    align-items: center;
+  }
+  .login-card {
+    width: 100%;
+    max-width: 400px;
+  }
+}
